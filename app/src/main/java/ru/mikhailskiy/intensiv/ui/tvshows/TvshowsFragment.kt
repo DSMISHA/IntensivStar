@@ -10,8 +10,10 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.fragment_tv_shows.*
 import ru.mikhailskiy.intensiv.R
+import ru.mikhailskiy.intensiv.data.MockRepository
 import ru.mikhailskiy.intensiv.data.Movie
 import ru.mikhailskiy.intensiv.ui.feed.MovieItem
 
@@ -60,37 +62,23 @@ class TvShowsFragment : Fragment() {
 
         // Добавляем recyclerView
         tvshows_recycler_view.layoutManager = LinearLayoutManager(context)
-//        tvshows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
+        if(adapter.itemCount == 0){
+            initTvshowsAdapter()
+        }else{
+            tvshows_recycler_view.adapter = adapter
+        }
+    }
 
+    private fun initTvshowsAdapter() {
+        tvshows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-//        val moviesList = listOf(
-//            MainCardContainer(
-//                R.string.recommended,
-//                MockRepository.getMovies().map {
-//                    MovieItem(it) { movie ->
-//                        openMovieDetails(
-//                            movie
-//                        )
-//                    }
-//                }.toList()
-//            )
-//        )
+        val seriesList = MockRepository.getShows().map {
+            Tvshowitem(it) { movie ->
+                openMovieDetails(movie)
+            }
+        }.toList()
 
-
-
-
-        adapter.add(Tvshowitem(Movie("123", 1.0), null))
-        adapter.add(Tvshowitem(Movie("123", 1.0), null))
-        adapter.add(Tvshowitem(Movie("123", 1.0), null))
-        adapter.add(Tvshowitem(Movie("123", 1.0), null))
-        adapter.add(Tvshowitem(Movie("123", 1.0), null))
-        adapter.add(Tvshowitem(Movie("123", 1.0), null))
-        adapter.add(Tvshowitem(Movie("123", 1.0), null))
-        adapter.add(Tvshowitem(Movie("123", 1.0), null))
-        tvshows_recycler_view.adapter = adapter
-
-//        tvshows_recycler_view.adapter = adapter.apply { addAll(moviesList) }
+        tvshows_recycler_view.adapter = adapter.apply { addAll(seriesList) }
     }
 
     private fun openMovieDetails(movie: Movie) {

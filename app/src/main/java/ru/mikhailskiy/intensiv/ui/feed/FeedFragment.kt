@@ -35,17 +35,18 @@ class FeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if(adapter.itemCount == 0){
+            initFeedAdapter()
+        }else{
+            movies_recycler_view.adapter = adapter
+        }
 
-        // Добавляем recyclerView
+        initSearchBar()
+    }
+
+    private fun initFeedAdapter(){
         movies_recycler_view.layoutManager = LinearLayoutManager(context)
         movies_recycler_view.adapter = adapter.apply { addAll(listOf()) }
-
-        search_toolbar.search_edit_text.afterTextChanged {
-            Timber.d(it.toString())
-            if (it.toString().length > 3) {
-                openSearch(it.toString())
-            }
-        }
 
         // Используя Мок-репозиторий получаем фэйковый список фильмов
         val moviesList = listOf(
@@ -77,7 +78,15 @@ class FeedFragment : Fragment() {
         )
 
         adapter.apply { addAll(newMoviesList) }
+    }
 
+    private fun initSearchBar(){
+        search_toolbar.search_edit_text.afterTextChanged {
+            Timber.d(it.toString())
+            if (it.toString().length > 3) {
+                openSearch(it.toString())
+            }
+        }
     }
 
     private fun openMovieDetails(movie: Movie) {
