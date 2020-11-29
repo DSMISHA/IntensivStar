@@ -8,6 +8,7 @@
 
     <color name="blueDark">#2C3848</color>
 
+    <color name="semi_white">#88FFFFFF</color>]
     <color name="white">#FFFFFF</color>]
     <color name="black">#000000</color>
     <color name="grey">#C2C2C2</color>
@@ -24,5 +25,6 @@
 
     <color name="mainFeedBackground">@color/colorPrimary</color>
 
+    <color name="detailsBtnGray">#33ffffff</color>
 
 </resources>

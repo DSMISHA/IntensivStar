@@ -1,25 +1,45 @@
 package ru.mikhailskiy.intensiv.ui.movie_details
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import kotlinx.android.synthetic.main.feed_fragment.*
+import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.mikhailskiy.intensiv.R
+import ru.mikhailskiy.intensiv.data.Movie
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+const val ARG_MOVIE = "movie"
 
 class MovieDetailsFragment : Fragment() {
 
-    private var param1: String? = null
-    private var param2: String? = null
+    private var movie: Movie? = null
+
+    companion object {
+        @JvmStatic
+        fun newInstance(movie: Movie) =
+            MovieDetailsFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(ARG_MOVIE, movie)
+                }
+            }
+    }
+
+    private val adapter by lazy {
+        GroupAdapter<GroupieViewHolder>()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            movie = it.getSerializable(ARG_MOVIE) as Movie?
         }
     }
 
@@ -31,15 +51,58 @@ class MovieDetailsFragment : Fragment() {
         return inflater.inflate(R.layout.movie_details_fragment, container, false)
     }
 
-    companion object {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MovieDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+
+        tv_movie_name.text = movie?.title
+        tv_description.text = movie?.description
+        tv_studio.text = movie?.studio
+        tv_genre.text = movie?.genre
+        tv_year.text = movie?.year.toString()
+        onWatchClicked()
+
+        if(adapter.itemCount == 0){
+            initCharacterAdapter()
+        }else{
+            movies_recycler_view.adapter = adapter
+        }
     }
+
+
+    private fun initCharacterAdapter(){
+        rv_characters.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+
+        val  charactersList = movie?.characters?.map {
+            CharacterItem(it)
+        }?.toList()
+
+        if(charactersList != null) {
+            rv_characters.adapter = adapter.apply { addAll(charactersList) }
+        }
+    }
+
+
+    private fun onWatchClicked(){
+        btn_watch.setOnClickListener {
+            val backgroundColor = getColor(R.color.blueDark)
+            backgroundColor?.let { iv_btn_watch.setBackgroundColor(it) }
+            iv_btn_watch.isEnabled = false
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                val backgroundColor1 = getColor(R.color.detailsBtnGray)
+                backgroundColor1?.let { iv_btn_watch.setBackgroundColor(it) }
+                iv_btn_watch.isEnabled = true
+            }, 200)
+        }
+    }
+
+    private fun getColor(colorId: Int): Int? {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            context?.getColor(colorId)
+        } else {
+            context?.resources?.getColor(colorId)
+        }
+    }
+
 }

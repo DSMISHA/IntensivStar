@@ -16,6 +16,7 @@ import ru.mikhailskiy.intensiv.R
 import ru.mikhailskiy.intensiv.data.MockRepository
 import ru.mikhailskiy.intensiv.data.Movie
 import ru.mikhailskiy.intensiv.ui.feed.MovieItem
+import ru.mikhailskiy.intensiv.ui.movie_details.ARG_MOVIE
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -92,7 +93,7 @@ class TvShowsFragment : Fragment() {
         }
 
         val bundle = Bundle()
-        bundle.putString("title", movie.title)
+        bundle.putSerializable(ARG_MOVIE, movie)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 }
