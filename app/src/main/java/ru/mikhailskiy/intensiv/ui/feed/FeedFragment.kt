@@ -36,16 +36,16 @@ class FeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(adapter.itemCount == 0){
+        if (adapter.itemCount == 0) {
             initFeedAdapter()
-        }else{
+        } else {
             movies_recycler_view.adapter = adapter
         }
 
         initSearchBar()
     }
 
-    private fun initFeedAdapter(){
+    private fun initFeedAdapter() {
         movies_recycler_view.layoutManager = LinearLayoutManager(context)
         movies_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
@@ -81,7 +81,7 @@ class FeedFragment : Fragment() {
         adapter.apply { addAll(newMoviesList) }
     }
 
-    private fun initSearchBar(){
+    private fun initSearchBar() {
         search_toolbar.search_edit_text.afterTextChanged {
             Timber.d(it.toString())
             if (it.toString().length > 3) {

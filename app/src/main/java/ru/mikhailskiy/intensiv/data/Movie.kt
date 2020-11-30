@@ -2,7 +2,7 @@ package ru.mikhailskiy.intensiv.data
 
 import java.io.Serializable
 
-class Movie(
+data class Movie(
     var title: String? = "",
     var voteAverage: Double = 0.0,
     var description: String? = null,
@@ -11,7 +11,7 @@ class Movie(
     var genre: String? = null,
     var year: Int? = null
 
-) : Serializable{
+) : Serializable{ //fixme to remove serializable and take movie from repo by id. Same for character
     val rating: Float
         get() = voteAverage.div(2).toFloat()
 }
