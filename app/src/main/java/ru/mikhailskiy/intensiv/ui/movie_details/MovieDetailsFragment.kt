@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import ru.mikhailskiy.intensiv.R
 import ru.mikhailskiy.intensiv.data.Movie
+import ru.mikhailskiy.intensiv.network.MovieApiClient
 
 const val ARG_MOVIE = "movie"
 
@@ -53,6 +54,10 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        //fixme
+        MovieApiClient.apiClient.getMovies()
 
 
         tv_movie_name.text = movie?.title
