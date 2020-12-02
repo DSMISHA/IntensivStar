@@ -18,6 +18,13 @@ interface MovieApiInterface {
         @Query("page") page: Int
     ): Observable<MovieWrapper?>?
 
+    @GET("movie/now_playing")
+    fun getWatchingMovies(
+        @Query("api_key") apiKey: String,
+        @Query("language") lang: String,
+        @Query("page") page: Int
+    ): Observable<MovieWrapper?>?
+
     @GET("movie/upcoming")
     fun getNewMovies(
         @Query("api_key") apiKey: String,

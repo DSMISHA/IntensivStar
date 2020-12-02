@@ -8,6 +8,7 @@ import ru.mikhailskiy.intensiv.data.TvShowWrapper
 
 interface RestApiInterface{
     fun getPopularMovies(): Observable<MovieWrapper?>?
+    fun getWatchingMovies(): Observable<MovieWrapper?>?
     fun getNewMovies(): Observable<MovieWrapper?>?
     fun getTvShows(): Observable<TvShowWrapper?>?
     fun getDetails(id: Int): Observable<MovieDetailsModel?>?
@@ -20,6 +21,12 @@ object RestApi : RestApiInterface{
         val lang = "en-US"
         val page = 1
         return MovieApiClient.apiClient.getPopularMovies(getKey(), lang, page)
+    }
+
+    override fun getWatchingMovies(): Observable<MovieWrapper?>?  {
+        val lang = "en-US"
+        val page = 1
+        return MovieApiClient.apiClient.getWatchingMovies(getKey(), lang, page)
     }
 
     override fun getNewMovies(): Observable<MovieWrapper?>?  {

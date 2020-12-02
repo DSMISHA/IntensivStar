@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.search_toolbar.view.*
 import ru.mikhailskiy.intensiv.MovieFinderApp
 import ru.mikhailskiy.intensiv.R
 import ru.mikhailskiy.intensiv.data.MovieModel
-import ru.mikhailskiy.intensiv.network.RestApi
 import ru.mikhailskiy.intensiv.ui.afterTextChanged
 import timber.log.Timber
 
@@ -55,26 +54,39 @@ class FeedFragment : Fragment() {
                 ?.subscribe {
 
                     if (it?.result != null) {
-                        initPopularSection(it.result)
+                        initSection(it.result, R.string.popular)
                     } else {
-                        initPopularSection(listOf())
+                        initSection(listOf(), R.string.popular)
                     }
                 }
 
             //todo error handlng
-            val dis2 = MovieFinderApp.instance?.getRestApi()?.getNewMovies()?.subscribeOn(Schedulers.io())
+            val dis2 = MovieFinderApp.instance?.getRestApi()?.getWatchingMovies()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe {
+                    if (it?.result != null) {
+                        initSection(it.result, R.string.watching)
+                    } else {
+                        initSection(listOf(), R.string.watching)
+                    }
+                }
+
+            //todo error handlng
+            val dis3 = MovieFinderApp.instance?.getRestApi()?.getNewMovies()?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe {
 
                     if (it?.result != null) {
-                        initUpcomingSection(it.result)
+                        initSection(it.result, R.string.upcoming)
                     } else {
-                        initUpcomingSection(listOf())
+                        initSection(listOf(), R.string.upcoming)
                     }
                 }
 
             dis?.let { compoDisposable.add(dis) }
             dis2?.let { compoDisposable.add(dis2) }
+            dis3?.let { compoDisposable.add(dis3) }
+
         } else {
             movies_recycler_view.adapter = adapter
         }
@@ -82,13 +94,12 @@ class FeedFragment : Fragment() {
         initSearchBar()
     }
 
-    private fun initPopularSection(popularMovies: List<MovieModel>) {
 
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
+    private fun initSection(movies: List<MovieModel>, sectionHeaderId: Int) {
         val moviesList = listOf(
             MainCardContainer(
-                R.string.recommended,
-                popularMovies.map {
+                sectionHeaderId,
+                movies.map {
                     MovieItem(it) { movie ->
                         openMovieDetails(
                             movie
@@ -97,58 +108,9 @@ class FeedFragment : Fragment() {
                 }.toList()
             )
         )
-
         movies_recycler_view.adapter = adapter.apply { addAll(moviesList) }
-
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-        // Чтобы отобразить второй ряд фильмов
-//        val newMoviesList = listOf(
-//            MainCardContainer(
-//                R.string.upcoming,
-//                MockRepository.getMovies().map {
-//                    MovieItem(it) { movie ->
-//                        openMovieDetails(movie)
-//                    }
-//                }.toList()
-//            )
-//        )
-//
-//        adapter.apply { addAll(newMoviesList) }
     }
 
-    private fun initUpcomingSection(newMovies: List<MovieModel>) {
-
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-        val moviesList = listOf(
-            MainCardContainer(
-                R.string.recommended,
-                newMovies.map {
-                    MovieItem(it) { movie ->
-                        openMovieDetails(
-                            movie
-                        )
-                    }
-                }.toList()
-            )
-        )
-
-        movies_recycler_view.adapter = adapter.apply { addAll(moviesList) }
-
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-        // Чтобы отобразить второй ряд фильмов
-//        val newMoviesList = listOf(
-//            MainCardContainer(
-//                R.string.upcoming,
-//                MockRepository.getMovies().map {
-//                    MovieItem(it) { movie ->
-//                        openMovieDetails(movie)
-//                    }
-//                }.toList()
-//            )
-//        )
-//
-//        adapter.apply { addAll(newMoviesList) }
-    }
 
     private fun initSearchBar() {
         search_toolbar.search_edit_text.afterTextChanged {
