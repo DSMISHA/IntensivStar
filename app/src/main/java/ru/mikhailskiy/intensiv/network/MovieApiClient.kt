@@ -12,6 +12,8 @@ import ru.mikhailskiy.intensiv.BuildConfig
 
 object MovieApiClient {
 
+    //todo add cache
+
     private val client: OkHttpClient = OkHttpClient.Builder().apply {
         if(BuildConfig.DEBUG) {
             addInterceptor(HttpLoggingInterceptor().apply {

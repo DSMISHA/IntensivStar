@@ -14,6 +14,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
+import ru.mikhailskiy.intensiv.MovieFinderApp
 import ru.mikhailskiy.intensiv.R
 import ru.mikhailskiy.intensiv.data.MovieModel
 import ru.mikhailskiy.intensiv.network.RestApi
@@ -49,7 +50,7 @@ class FeedFragment : Fragment() {
 
         if (adapter.itemCount == 0) {
             //todo error handlng
-            val dis = RestApi.getPopularMovies()?.subscribeOn(Schedulers.io())
+            val dis = MovieFinderApp.instance?.getRestApi()?.getPopularMovies()?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe {
 
@@ -61,7 +62,7 @@ class FeedFragment : Fragment() {
                 }
 
             //todo error handlng
-            val dis2 = RestApi.getNewMovies()?.subscribeOn(Schedulers.io())
+            val dis2 = MovieFinderApp.instance?.getRestApi()?.getNewMovies()?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe {
 

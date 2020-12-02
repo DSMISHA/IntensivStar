@@ -1,4 +1,4 @@
-package ru.mikhailskiy.intensiv.network
+package ru.mikhailskiy.intensiv.data
 
 import com.google.gson.annotations.SerializedName
 

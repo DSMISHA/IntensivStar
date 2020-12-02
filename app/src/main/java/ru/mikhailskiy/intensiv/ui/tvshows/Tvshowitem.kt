@@ -6,9 +6,7 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.item_with_text.*
 import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.R
-import ru.mikhailskiy.intensiv.data.Movie
-import ru.mikhailskiy.intensiv.data.MovieModel
-import ru.mikhailskiy.intensiv.network.TvShowModel
+import ru.mikhailskiy.intensiv.data.TvShowModel
 
 class Tvshowitem(
     private val content: TvShowModel,

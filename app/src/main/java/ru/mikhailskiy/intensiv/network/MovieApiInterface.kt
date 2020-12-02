@@ -38,6 +38,10 @@ interface MovieApiInterface {
         @Query("api_key") apiKey: String
     ): Observable<MovieDetailsModel?>?
 
+
+    //todo
+    // https://developers.themoviedb.org/3/movies/get-movie-details
+    // https://developers.themoviedb.org/3/movies/get-movie-credits
 }
 
 

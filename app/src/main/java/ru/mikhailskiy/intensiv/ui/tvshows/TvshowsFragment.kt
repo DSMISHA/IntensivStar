@@ -13,9 +13,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_tv_shows.*
+import ru.mikhailskiy.intensiv.MovieFinderApp
 import ru.mikhailskiy.intensiv.R
-import ru.mikhailskiy.intensiv.network.RestApi
-import ru.mikhailskiy.intensiv.network.TvShowModel
+import ru.mikhailskiy.intensiv.data.TvShowModel
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -65,7 +65,7 @@ class TvShowsFragment : Fragment() {
         // Добавляем recyclerView
         tvshows_recycler_view.layoutManager = LinearLayoutManager(context)
         if(adapter.itemCount == 0){
-            disposable = RestApi.getTvShows()?.subscribeOn(Schedulers.io())
+            disposable = MovieFinderApp.instance?.getRestApi()?.getTvShows()?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe {
                     if (it?.result != null) {
