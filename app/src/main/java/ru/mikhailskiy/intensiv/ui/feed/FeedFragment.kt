@@ -8,15 +8,16 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
-import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.R
-import ru.mikhailskiy.intensiv.data.MockRepository
-import ru.mikhailskiy.intensiv.data.Movie
+import ru.mikhailskiy.intensiv.data.MovieModel
+import ru.mikhailskiy.intensiv.network.RestApi
 import ru.mikhailskiy.intensiv.ui.afterTextChanged
-import ru.mikhailskiy.intensiv.ui.movie_details.ARG_MOVIE
 import timber.log.Timber
 
 class FeedFragment : Fragment() {
@@ -34,10 +35,45 @@ class FeedFragment : Fragment() {
         return inflater.inflate(R.layout.feed_fragment, container, false)
     }
 
+    private val compoDisposable: CompositeDisposable by lazy { CompositeDisposable() }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        movies_recycler_view.layoutManager = LinearLayoutManager(context)
+        movies_recycler_view.adapter = adapter.apply { addAll(listOf()) }
+
+
+        //todo to implement presenter or something else
+        //todo to add pagination
+
         if (adapter.itemCount == 0) {
-            initFeedAdapter()
+            //todo error handlng
+            val dis = RestApi.getPopularMovies()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe {
+
+                    if (it?.result != null) {
+                        initPopularSection(it.result)
+                    } else {
+                        initPopularSection(listOf())
+                    }
+                }
+
+            //todo error handlng
+            val dis2 = RestApi.getNewMovies()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe {
+
+                    if (it?.result != null) {
+                        initUpcomingSection(it.result)
+                    } else {
+                        initUpcomingSection(listOf())
+                    }
+                }
+
+            dis?.let { compoDisposable.add(dis) }
+            dis2?.let { compoDisposable.add(dis2) }
         } else {
             movies_recycler_view.adapter = adapter
         }
@@ -45,15 +81,13 @@ class FeedFragment : Fragment() {
         initSearchBar()
     }
 
-    private fun initFeedAdapter() {
-        movies_recycler_view.layoutManager = LinearLayoutManager(context)
-        movies_recycler_view.adapter = adapter.apply { addAll(listOf()) }
+    private fun initPopularSection(popularMovies: List<MovieModel>) {
 
         // Используя Мок-репозиторий получаем фэйковый список фильмов
         val moviesList = listOf(
             MainCardContainer(
                 R.string.recommended,
-                MockRepository.getMovies().map {
+                popularMovies.map {
                     MovieItem(it) { movie ->
                         openMovieDetails(
                             movie
@@ -67,18 +101,52 @@ class FeedFragment : Fragment() {
 
         // Используя Мок-репозиторий получаем фэйковый список фильмов
         // Чтобы отобразить второй ряд фильмов
-        val newMoviesList = listOf(
+//        val newMoviesList = listOf(
+//            MainCardContainer(
+//                R.string.upcoming,
+//                MockRepository.getMovies().map {
+//                    MovieItem(it) { movie ->
+//                        openMovieDetails(movie)
+//                    }
+//                }.toList()
+//            )
+//        )
+//
+//        adapter.apply { addAll(newMoviesList) }
+    }
+
+    private fun initUpcomingSection(newMovies: List<MovieModel>) {
+
+        // Используя Мок-репозиторий получаем фэйковый список фильмов
+        val moviesList = listOf(
             MainCardContainer(
-                R.string.upcoming,
-                MockRepository.getMovies().map {
+                R.string.recommended,
+                newMovies.map {
                     MovieItem(it) { movie ->
-                        openMovieDetails(movie)
+                        openMovieDetails(
+                            movie
+                        )
                     }
                 }.toList()
             )
         )
 
-        adapter.apply { addAll(newMoviesList) }
+        movies_recycler_view.adapter = adapter.apply { addAll(moviesList) }
+
+        // Используя Мок-репозиторий получаем фэйковый список фильмов
+        // Чтобы отобразить второй ряд фильмов
+//        val newMoviesList = listOf(
+//            MainCardContainer(
+//                R.string.upcoming,
+//                MockRepository.getMovies().map {
+//                    MovieItem(it) { movie ->
+//                        openMovieDetails(movie)
+//                    }
+//                }.toList()
+//            )
+//        )
+//
+//        adapter.apply { addAll(newMoviesList) }
     }
 
     private fun initSearchBar() {
@@ -90,7 +158,7 @@ class FeedFragment : Fragment() {
         }
     }
 
-    private fun openMovieDetails(movie: Movie) {
+    private fun openMovieDetails(movie: MovieModel) {
         val options = navOptions {
             anim {
                 enter = R.anim.slide_in_right
@@ -100,9 +168,9 @@ class FeedFragment : Fragment() {
             }
         }
 
-        val bundle = Bundle()
+   /*     val bundle = Bundle()
         bundle.putSerializable(ARG_MOVIE, movie)
-        findNavController().navigate(R.id.movie_details_fragment, bundle, options)
+        findNavController().navigate(R.id.movie_details_fragment, bundle, options)*/
     }
 
     private fun openSearch(searchText: String) {
@@ -118,6 +186,11 @@ class FeedFragment : Fragment() {
         val bundle = Bundle()
         bundle.putString("search", searchText)
         findNavController().navigate(R.id.search_dest, bundle, options)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        compoDisposable.clear()
     }
 
     override fun onStop() {

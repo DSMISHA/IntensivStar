@@ -29,6 +29,7 @@
         android:layout_marginTop="@dimen/material_margin_super_small"
         android:ellipsize="end"
         android:maxLines="2"
+        android:lines="2"
         android:textColor="@color/white"
         android:textSize="12sp"
         tools:text="Мир дикого запада"

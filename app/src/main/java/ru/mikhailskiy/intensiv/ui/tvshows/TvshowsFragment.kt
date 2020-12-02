@@ -5,18 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import kotlinx.android.synthetic.main.feed_fragment.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_tv_shows.*
 import ru.mikhailskiy.intensiv.R
-import ru.mikhailskiy.intensiv.data.MockRepository
-import ru.mikhailskiy.intensiv.data.Movie
-import ru.mikhailskiy.intensiv.ui.feed.MovieItem
-import ru.mikhailskiy.intensiv.ui.movie_details.ARG_MOVIE
+import ru.mikhailskiy.intensiv.network.RestApi
+import ru.mikhailskiy.intensiv.network.TvShowModel
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -33,6 +32,8 @@ class TvShowsFragment : Fragment() {
                 }
             }
     }
+
+    private var disposable: Disposable? = null
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -64,16 +65,25 @@ class TvShowsFragment : Fragment() {
         // Добавляем recyclerView
         tvshows_recycler_view.layoutManager = LinearLayoutManager(context)
         if(adapter.itemCount == 0){
-            initTvshowsAdapter()
+            disposable = RestApi.getTvShows()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe {
+                    if (it?.result != null) {
+                        initTvshowsAdapter(it.result)
+                    } else {
+                        initTvshowsAdapter(listOf())
+                    }
+                }
         }else{
             tvshows_recycler_view.adapter = adapter
         }
     }
 
-    private fun initTvshowsAdapter() {
-        tvshows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
+    private fun initTvshowsAdapter(popularTvShows: List<TvShowModel>) {
+//        tvshows_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
-        val seriesList = MockRepository.getShows().map {
+
+        val seriesList = popularTvShows.map {
             Tvshowitem(it) { movie ->
                 openMovieDetails(movie)
             }
@@ -82,7 +92,7 @@ class TvShowsFragment : Fragment() {
         tvshows_recycler_view.adapter = adapter.apply { addAll(seriesList) }
     }
 
-    private fun openMovieDetails(movie: Movie) {
+    private fun openMovieDetails(movie: TvShowModel) {
         val options = navOptions {
             anim {
                 enter = R.anim.slide_in_right
@@ -92,8 +102,14 @@ class TvShowsFragment : Fragment() {
             }
         }
 
-        val bundle = Bundle()
+        //todo click to drtails
+        /*val bundle = Bundle()
         bundle.putSerializable(ARG_MOVIE, movie)
-        findNavController().navigate(R.id.movie_details_fragment, bundle, options)
+        findNavController().navigate(R.id.movie_details_fragment, bundle, options)*/
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable?.let { if(!it.isDisposed) it.dispose() }
     }
 }

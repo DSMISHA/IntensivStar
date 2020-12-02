@@ -56,8 +56,8 @@ class MovieDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        //fixme
-        MovieApiClient.apiClient.getMovies()
+//        //fixme
+//        MovieApiClient.apiClient.getMovies()
 
 
         tv_movie_name.text = movie?.title
