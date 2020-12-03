@@ -2,16 +2,16 @@ package ru.mikhailskiy.intensiv.network
 
 import io.reactivex.Observable
 import ru.mikhailskiy.intensiv.BuildConfig
-import ru.mikhailskiy.intensiv.data.MovieDetailsModel
-import ru.mikhailskiy.intensiv.data.MovieWrapper
-import ru.mikhailskiy.intensiv.data.TvShowWrapper
+import ru.mikhailskiy.intensiv.data.*
+import java.io.IOException
 
 interface RestApiInterface{
     fun getPopularMovies(): Observable<MovieWrapper?>?
     fun getWatchingMovies(): Observable<MovieWrapper?>?
     fun getNewMovies(): Observable<MovieWrapper?>?
     fun getTvShows(): Observable<TvShowWrapper?>?
-    fun getDetails(id: Int): Observable<MovieDetailsModel?>?
+    fun getDetails(id: Int): Observable<MovieModel?>?
+    fun getMovieCast(id: Int): Observable<Cast?>?
 }
 
 
@@ -41,8 +41,12 @@ object RestApi : RestApiInterface{
         return MovieApiClient.apiClient.getTvShows(getKey(), lang, page)
     }
 
-    override fun getDetails(id: Int): Observable<MovieDetailsModel?>?  {
+    override fun getDetails(id: Int): Observable<MovieModel?>?  {
         return MovieApiClient.apiClient.getMovieDetails(id, getKey())
+    }
+
+    override fun getMovieCast(id: Int): Observable<Cast?>? {
+        return MovieApiClient.apiClient.getMovieCast(id, getKey())
     }
 
     private fun getKey(): String{

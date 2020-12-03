@@ -4,9 +4,7 @@ import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.mikhailskiy.intensiv.data.MovieDetailsModel
-import ru.mikhailskiy.intensiv.data.MovieWrapper
-import ru.mikhailskiy.intensiv.data.TvShowWrapper
+import ru.mikhailskiy.intensiv.data.*
 
 
 interface MovieApiInterface {
@@ -43,12 +41,14 @@ interface MovieApiInterface {
     fun getMovieDetails(
         @Path("movie_id") id: Int,
         @Query("api_key") apiKey: String
-    ): Observable<MovieDetailsModel?>?
+    ): Observable<MovieModel?>?
 
+    @GET("movie/{movie_id}/credits")
+    fun getMovieCast(
+        @Path("movie_id") id: Int,
+        @Query("api_key") apiKey: String
+    ): Observable<Cast?>?
 
-    //todo
-    // https://developers.themoviedb.org/3/movies/get-movie-details
-    // https://developers.themoviedb.org/3/movies/get-movie-credits
 }
 
 

@@ -9,26 +9,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import kotlinx.android.synthetic.main.feed_fragment.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.movie_details_fragment.*
+import ru.mikhailskiy.intensiv.BuildConfig
+import ru.mikhailskiy.intensiv.MovieFinderApp
 import ru.mikhailskiy.intensiv.R
-import ru.mikhailskiy.intensiv.data.Movie
-import ru.mikhailskiy.intensiv.network.MovieApiClient
+import ru.mikhailskiy.intensiv.data.Cast
+import ru.mikhailskiy.intensiv.data.MovieModel
+import ru.mikhailskiy.intensiv.network.SimpleSubscriber
 
-const val ARG_MOVIE = "movie"
+const val ARG_MOVIE_ID = "movieId"
 
 class MovieDetailsFragment : Fragment() {
 
-    private var movie: Movie? = null
+    private var movieId: Int? = null
+    var movie: MovieModel? = null
+    private var cast: Cast? = null
+
+    private val compoDisposable: CompositeDisposable by lazy { CompositeDisposable() }
 
     companion object {
         @JvmStatic
-        fun newInstance(movie: Movie) =
+        fun newInstance(movieId: Int) =
             MovieDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(ARG_MOVIE, movie)
+                    putInt(ARG_MOVIE_ID, movieId)
                 }
             }
     }
@@ -40,7 +50,7 @@ class MovieDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            movie = it.getSerializable(ARG_MOVIE) as Movie?
+            movieId = it.getInt(ARG_MOVIE_ID)
         }
     }
 
@@ -55,30 +65,80 @@ class MovieDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-//        //fixme
-//        MovieApiClient.apiClient.getMovies()
-
-
-        tv_movie_name.text = movie?.title
-        tv_description.text = movie?.description
-        tv_studio.text = movie?.studio
-        tv_genre.text = movie?.genre
-        tv_year.text = movie?.year.toString()
-        onWatchClicked()
-
-        if(adapter.itemCount == 0){
-            initCharacterAdapter()
-        }else{
-            movies_recycler_view.adapter = adapter
+        if(movie == null){
+            loadDetailsData()
         }
     }
 
+    private fun loadDetailsData(){
+        if(movieId == null) return
 
-    private fun initCharacterAdapter(){
+        val dis = MovieFinderApp.instance?.getRestApi()?.getDetails(movieId!!)?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribeWith(object : DetailsObserver(){})
+
+        val dis2 = MovieFinderApp.instance?.getRestApi()?.getMovieCast(movieId!!)?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribeWith(object : CastObserver(){})
+
+        dis?.let { compoDisposable.add(dis) }
+        dis2?.let { compoDisposable.add(dis2) }
+    }
+
+    private open inner class DetailsObserver : SimpleSubscriber<MovieModel>(){
+        override fun onNext(it: MovieModel) {
+            movie = it
+            initPrimaryInfo()
+        }
+    }
+
+    private open inner class CastObserver : SimpleSubscriber<Cast>(){
+        override fun onNext(it: Cast) {
+            cast = it
+            initCastAdapter()
+        }
+    }
+
+    private fun initPrimaryInfo(){
+        loadImage()
+        tv_movie_name.text = movie?.title
+        tv_description.text = movie?.overview
+        tv_studio.text = getProductionString()
+        tv_genre.text = getGenresString()
+        tv_year.text = movie?.releaseDate?.substring(0, 4)
+        movie?.voteAverage?.let { movie_rating_details.rating = it/2 }
+        onWatchClicked()
+    }
+
+    private fun loadImage(){
+        if(!movie?.poster.isNullOrEmpty()) {
+            Picasso.get()
+                .load(BuildConfig.BASE_POSTER_URL + movie?.poster)
+                .into(iv_movie_image)
+        }
+    }
+
+    private fun getProductionString(): String{
+        var sProd = ""
+        movie?.productionCompanies?.forEach {
+            sProd += it.title + ", "
+        }
+        return sProd.dropLast(2)
+    }
+
+    private fun getGenresString(): String{
+        var sGenres = ""
+        movie?.genres?.forEach {
+            sGenres += it.title + ", "
+        }
+        return sGenres.dropLast(2)
+    }
+
+
+    private fun initCastAdapter(){
         rv_characters.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
-        val  charactersList = movie?.characters?.map {
+        val  charactersList = cast?.cast?.map {
             CharacterItem(it)
         }?.toList()
 
@@ -86,6 +146,7 @@ class MovieDetailsFragment : Fragment() {
             rv_characters.adapter = adapter.apply { addAll(charactersList) }
         }
     }
+
 
 
     private fun onWatchClicked(){
@@ -110,4 +171,8 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        compoDisposable.clear()
+    }
 }

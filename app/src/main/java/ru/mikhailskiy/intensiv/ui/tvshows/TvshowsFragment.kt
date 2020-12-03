@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_tv_shows.*
 import ru.mikhailskiy.intensiv.MovieFinderApp
 import ru.mikhailskiy.intensiv.R
 import ru.mikhailskiy.intensiv.data.TvShowModel
+import ru.mikhailskiy.intensiv.ui.movie_details.ARG_MOVIE_ID
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -85,15 +87,15 @@ class TvShowsFragment : Fragment() {
 
         val seriesList = popularTvShows.map {
             Tvshowitem(it) { movie ->
-                openMovieDetails(movie)
+                openMovieDetails(movie.id)
             }
         }.toList()
 
         tvshows_recycler_view.adapter = adapter.apply { addAll(seriesList) }
     }
 
-    private fun openMovieDetails(movie: TvShowModel) {
-        val options = navOptions {
+    private fun openMovieDetails(movieId: Int) {
+        /*val options = navOptions {
             anim {
                 enter = R.anim.slide_in_right
                 exit = R.anim.slide_out_left
@@ -102,9 +104,8 @@ class TvShowsFragment : Fragment() {
             }
         }
 
-        //todo click to drtails
-        /*val bundle = Bundle()
-        bundle.putSerializable(ARG_MOVIE, movie)
+        val bundle = Bundle()
+        bundle.putInt(ARG_MOVIE_ID, movieId)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)*/
     }
 

@@ -10,7 +10,7 @@ object MockRepository {
                 title = "Spider-Man $x",
                 voteAverage = 10.0 - x,
                 description = "the movie description",
-                characters = getCharacters(),
+//                characters = getCharacters(),
                 studio = "studio",
                 genre = "genre",
                 year = 1999
@@ -29,7 +29,7 @@ object MockRepository {
                 title = "Spider-Man $x",
                 voteAverage = 10.0 - x,
                 description = "the movie description",
-                characters = getCharacters(),
+//                characters = getCharacters(),
                 studio = "studio",
                 genre = "genre",
                 year = 2000
@@ -41,11 +41,11 @@ object MockRepository {
     }
 
 
-    private fun getCharacters(): List<Character>{
-        val res: MutableList<Character> = ArrayList()
-        for(i in 0..5){
-            res.add(Character("", "Tommy Lee Jones"))
-        }
-        return res
-    }
+//    private fun getCharacters(): List<Character>{
+//        val res: MutableList<Character> = ArrayList()
+//        for(i in 0..5){
+//            res.add(Character("", "Tommy Lee Jones"))
+//        }
+//        return res
+//    }
 }

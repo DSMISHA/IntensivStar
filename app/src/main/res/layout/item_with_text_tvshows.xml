@@ -45,13 +45,12 @@
         <androidx.appcompat.widget.AppCompatRatingBar
             android:id="@+id/movie_rating"
             style="@style/Base.Widget.AppCompat.RatingBar.Small"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="15dp"
             android:isIndicator="true"
             android:numStars="5"
             android:progressBackgroundTint="@color/colorControlNormal"
             android:stepSize="0.5"
-            tools:rating="5"
             android:layout_gravity="end|center_vertical" />
 
     </FrameLayout>

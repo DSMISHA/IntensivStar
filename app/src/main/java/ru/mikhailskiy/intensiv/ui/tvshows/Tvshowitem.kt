@@ -4,6 +4,10 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import kotlinx.android.synthetic.main.item_with_text.*
+import kotlinx.android.synthetic.main.item_with_text.content
+import kotlinx.android.synthetic.main.item_with_text.description
+import kotlinx.android.synthetic.main.item_with_text.image_preview
+import kotlinx.android.synthetic.main.item_with_text_tvshows.*
 import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.R
 import ru.mikhailskiy.intensiv.data.TvShowModel
@@ -33,7 +37,7 @@ class Tvshowitem(
     }
 
     private fun setRating(viewHolder: GroupieViewHolder){
-        content.voteAverage?.let { viewHolder.movie_rating.rating = it }
+        content.voteAverage?.let { viewHolder.movie_rating.rating = it/2 }
     }
 
     private fun loadImage(viewHolder: GroupieViewHolder){

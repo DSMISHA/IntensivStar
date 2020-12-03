@@ -1,7 +1,11 @@
 package ru.mikhailskiy.intensiv.data
 
-import com.google.gson.annotations.SerializedName
-
+/*
 data class MovieDetailsModel(
-    @SerializedName("adult") val isAdult: Boolean?
-)
+    override val id: Int,
+    override val title: String?,
+    override val poster: String?,
+    override val voteAverage: Float?,
+    override val overview: String?,
+    override val genres: List<Genre>?
+): MovieModel(id, title, poster, voteAverage, overview, genres)*/

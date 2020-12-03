@@ -1,6 +1,9 @@
 package ru.mikhailskiy.intensiv.data
 
-import java.io.Serializable
+import com.google.gson.annotations.SerializedName
 
-//fixme to remove serializable and take movie from repo by id. Same for character
-data class Character(val image: String? = null, val name: String? = null): Serializable
+data class Character(
+    @SerializedName("id") val id:Int,
+    @SerializedName("profile_path") val image: String? = null,
+    @SerializedName("name") val name: String? = null
+)

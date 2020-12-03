@@ -14,14 +14,13 @@
         android:layout_height="@dimen/details_character_photo_size"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
         android:src="@drawable/ic_avatar"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/rv_character_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:text="Jason Momoa"
         android:lines="2"
         android:gravity="center"
         android:textSize="@dimen/details_text_size"

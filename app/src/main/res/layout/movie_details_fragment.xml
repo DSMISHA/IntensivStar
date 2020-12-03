@@ -31,6 +31,10 @@
             android:textSize="@dimen/details_header_text_size"
             android:textStyle="bold"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <FrameLayout
             android:id="@+id/btn_watch"
@@ -58,6 +62,21 @@
         </FrameLayout>
 
 
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/movie_rating_details"
+            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressBackgroundTint="@color/colorControlNormal"
+            android:stepSize="0.5"
+            tools:rating="5"
+            android:layout_gravity="center_vertical|end"
+            android:layout_margin="@dimen/details_margin"/>
+
+        </FrameLayout>
+
         <TextView
             android:id="@+id/tv_description"
             android:layout_width="match_parent"
@@ -66,7 +85,7 @@
             android:textSize="@dimen/details_text_size"
             android:textColor="@color/semi_white"
             android:lineSpacingMultiplier="1.7"
-            android:text="In 1985 Maine, lighthouse keeper Thomas Curry rescues Atlanna, the queen of the underwater nation of Atlantis, during a storm. They eventually fall in love and have a son named Arthur, who is born with the power to communicate with marine lifeforms. "/>
+            />
 
 
         <androidx.recyclerview.widget.RecyclerView
