@@ -7,4 +7,6 @@ data class TvShowModel(
     @SerializedName("name") val title: String?,
     @SerializedName("poster_path") val poster: String?,
     @SerializedName("vote_average") val voteAverage: Float?
-)
+){
+    val rating: Float? get() = voteAverage?.div(2)
+}

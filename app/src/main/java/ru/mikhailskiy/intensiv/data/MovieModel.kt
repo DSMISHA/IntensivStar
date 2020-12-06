@@ -11,6 +11,9 @@ data class MovieModel(
     @SerializedName("genres")  val genres: List<Genre>?,
     @SerializedName("production_companies")  val productionCompanies: List<Production>?,
     @SerializedName("release_date")  val releaseDate: String?
+){
+    val rating: Float? get() = voteAverage?.div(2)
+}
 
-)
+
 

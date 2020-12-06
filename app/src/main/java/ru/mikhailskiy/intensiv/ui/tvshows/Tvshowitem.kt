@@ -37,7 +37,7 @@ class Tvshowitem(
     }
 
     private fun setRating(viewHolder: GroupieViewHolder){
-        content.voteAverage?.let { viewHolder.movie_rating.rating = it/2 }
+        content.rating?.let { viewHolder.movie_rating.rating = it }
     }
 
     private fun loadImage(viewHolder: GroupieViewHolder){

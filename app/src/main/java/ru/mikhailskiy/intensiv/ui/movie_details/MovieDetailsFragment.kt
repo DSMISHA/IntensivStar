@@ -106,7 +106,7 @@ class MovieDetailsFragment : Fragment() {
         tv_studio.text = getProductionString()
         tv_genre.text = getGenresString()
         tv_year.text = movie?.releaseDate?.substring(0, 4)
-        movie?.voteAverage?.let { movie_rating_details.rating = it/2 }
+        movie?.rating?.let { movie_rating_details.rating = it }
         onWatchClicked()
     }
 

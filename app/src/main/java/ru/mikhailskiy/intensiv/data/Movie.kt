@@ -12,6 +12,5 @@ data class Movie(
     var year: Int? = null
 
 ) : Serializable{ //fixme to remove serializable and take movie from repo by id. Same for character
-    val rating: Float
-        get() = voteAverage.div(2).toFloat()
+    val rating: Float get() = voteAverage.div(2).toFloat()
 }
