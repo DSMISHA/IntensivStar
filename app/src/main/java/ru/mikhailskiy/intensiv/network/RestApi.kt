@@ -1,9 +1,7 @@
 package ru.mikhailskiy.intensiv.network
 
 import io.reactivex.Observable
-import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.data.*
-import java.io.IOException
 
 interface RestApiInterface{
     fun getPopularMovies(): Observable<MovieWrapper?>?
@@ -18,38 +16,31 @@ interface RestApiInterface{
 object RestApi : RestApiInterface{
 
     override fun getPopularMovies(): Observable<MovieWrapper?>?  {
-        val lang = "en-US"
         val page = 1
-        return MovieApiClient.apiClient.getPopularMovies(getKey(), lang, page)
+        return MovieApiClient.apiClient.getPopularMovies(page)
     }
 
     override fun getWatchingMovies(): Observable<MovieWrapper?>?  {
-        val lang = "en-US"
         val page = 1
-        return MovieApiClient.apiClient.getWatchingMovies(getKey(), lang, page)
+        return MovieApiClient.apiClient.getWatchingMovies(page)
     }
 
     override fun getNewMovies(): Observable<MovieWrapper?>?  {
-        val lang = "en-US"
         val page = 1
-        return MovieApiClient.apiClient.getNewMovies(getKey(), lang, page)
+        return MovieApiClient.apiClient.getNewMovies(page)
     }
 
     override fun getTvShows(): Observable<TvShowWrapper?>?  {
-        val lang = "en-US"
         val page = 1
-        return MovieApiClient.apiClient.getTvShows(getKey(), lang, page)
+        return MovieApiClient.apiClient.getTvShows(page)
     }
 
     override fun getDetails(id: Int): Observable<MovieModel?>?  {
-        return MovieApiClient.apiClient.getMovieDetails(id, getKey())
+        return MovieApiClient.apiClient.getMovieDetails(id)
     }
 
     override fun getMovieCast(id: Int): Observable<Cast?>? {
-        return MovieApiClient.apiClient.getMovieCast(id, getKey())
+        return MovieApiClient.apiClient.getMovieCast(id)
     }
 
-    private fun getKey(): String{
-        return BuildConfig.THE_MOVIE_DATABASE_API
-    }
 }

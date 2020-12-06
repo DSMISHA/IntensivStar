@@ -4,49 +4,44 @@ import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.data.*
 
 
 interface MovieApiInterface {
+    companion object {
+        private const val QUARRY_API_KEY = "?api_key=" + BuildConfig.THE_MOVIE_DATABASE_API
+        private const val QUARRY_LANGUAGE = "&language=en-US"
+    }
 
-    @GET("movie/popular")
+    @GET("movie/popular$QUARRY_API_KEY$QUARRY_LANGUAGE")
     fun getPopularMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") lang: String,
         @Query("page") page: Int
     ): Observable<MovieWrapper?>?
 
-    @GET("movie/now_playing")
+    @GET("movie/now_playing$QUARRY_API_KEY$QUARRY_LANGUAGE")
     fun getWatchingMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") lang: String,
         @Query("page") page: Int
     ): Observable<MovieWrapper?>?
 
-    @GET("movie/upcoming")
+    @GET("movie/upcoming$QUARRY_API_KEY$QUARRY_LANGUAGE")
     fun getNewMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") lang: String,
         @Query("page") page: Int
     ): Observable<MovieWrapper?>?
 
-    @GET("tv/popular")
+    @GET("tv/popular$QUARRY_API_KEY$QUARRY_LANGUAGE")
     fun getTvShows(
-        @Query("api_key") apiKey: String,
-        @Query("language") lang: String,
         @Query("page") page: Int
     ): Observable<TvShowWrapper?>?
 
-    @GET("movie/{movie_id}")
+    @GET("movie/{movie_id}$QUARRY_API_KEY")
     fun getMovieDetails(
-        @Path("movie_id") id: Int,
-        @Query("api_key") apiKey: String
+        @Path("movie_id") id: Int
     ): Observable<MovieModel?>?
 
-    @GET("movie/{movie_id}/credits")
+    @GET("movie/{movie_id}/credits$QUARRY_API_KEY")
     fun getMovieCast(
-        @Path("movie_id") id: Int,
-        @Query("api_key") apiKey: String
+        @Path("movie_id") id: Int
     ): Observable<Cast?>?
 
 }
