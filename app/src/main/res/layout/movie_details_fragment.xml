@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/details_header_image_height"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_avatar"
             app:shapeAppearanceOverlay="@style/BottomCorner"
             tools:ignore="ContentDescription" />
 
@@ -26,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/details_margin"
-            android:text="Aquaman"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/details_header_text_size"
             android:textStyle="bold"/>
@@ -38,7 +37,7 @@
 
         <FrameLayout
             android:id="@+id/btn_watch"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/details_button_height"
             android:layout_height="50dp"
             android:layout_margin="@dimen/details_margin">
 
