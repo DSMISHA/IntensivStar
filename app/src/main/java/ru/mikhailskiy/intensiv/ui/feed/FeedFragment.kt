@@ -8,17 +8,20 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Action
+import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
+import ru.mikhailskiy.intensiv.MainActivity
 import ru.mikhailskiy.intensiv.MovieFinderApp
 import ru.mikhailskiy.intensiv.R
 import ru.mikhailskiy.intensiv.data.MovieModel
 import ru.mikhailskiy.intensiv.data.MovieWrapper
-import ru.mikhailskiy.intensiv.network.SimpleSubscriber
 import ru.mikhailskiy.intensiv.ui.afterTextChanged
 import ru.mikhailskiy.intensiv.ui.movie_details.ARG_MOVIE_ID
 import timber.log.Timber
@@ -57,55 +60,33 @@ class FeedFragment : Fragment() {
         initSearchBar()
     }
 
-    private fun loadDataAndInitMovieSections(){
-        val dis = MovieFinderApp.instance?.getRestApi()?.getPopularMovies()?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribeWith(object : PopularObserver(){})
+    private fun loadDataAndInitMovieSections() {
+        val obs1 = MovieFinderApp.instance?.getRestApi()?.getPopularMovies()
+        val obs2 = MovieFinderApp.instance?.getRestApi()?.getWatchingMovies()
+        val obs3 = MovieFinderApp.instance?.getRestApi()?.getNewMovies()
 
-        val dis2 = MovieFinderApp.instance?.getRestApi()?.getWatchingMovies()?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribeWith(object : WatchingObserver(){})
-
-        val dis3 = MovieFinderApp.instance?.getRestApi()?.getNewMovies()?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribeWith(object : NewObserver(){})
+        val dis = Observable.zip(obs1, obs2, obs3,
+            Function3<MovieWrapper?, MovieWrapper?, MovieWrapper?, List<List<MovieModel>?>> { t1, t2, t3 ->
+                return@Function3 listOf(t1.result, t2.result, t3.result)
+            }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete { (activity as MainActivity).showProgress(false) }
+            .doOnSubscribe{ (activity as MainActivity).showProgress(true) }
+            .doOnError { it.printStackTrace() }
+            .subscribe {
+                initSection(it[0], R.string.popular)
+                initSection(it[1], R.string.watching)
+                initSection(it[2], R.string.upcoming)
+            }
 
         dis?.let { compoDisposable.add(dis) }
-        dis2?.let { compoDisposable.add(dis2) }
-        dis3?.let { compoDisposable.add(dis3) }
     }
 
-    private open inner class PopularObserver : SimpleSubscriber<MovieWrapper>(){
-        override fun onNext(it: MovieWrapper) {
-            if (it.result != null) {
-                initSection(it.result, R.string.popular)
-            } else {
-                initSection(listOf(), R.string.popular)
-            }
+    private fun initSection(movies: List<MovieModel>?, sectionHeaderId: Int) {
+        if(movies == null){
+            return
         }
-    }
 
-    private open inner class WatchingObserver : SimpleSubscriber<MovieWrapper>(){
-        override fun onNext(it: MovieWrapper) {
-            if (it.result != null) {
-                initSection(it.result, R.string.watching)
-            } else {
-                initSection(listOf(), R.string.watching)
-            }
-        }
-    }
-
-    private open inner class NewObserver : SimpleSubscriber<MovieWrapper>(){
-        override fun onNext(it: MovieWrapper) {
-            if (it.result != null) {
-                initSection(it.result, R.string.upcoming)
-            } else {
-                initSection(listOf(), R.string.upcoming)
-            }
-        }
-    }
-
-    private fun initSection(movies: List<MovieModel>, sectionHeaderId: Int) {
         val moviesList = listOf(
             MainCardContainer(
                 sectionHeaderId,
@@ -120,7 +101,6 @@ class FeedFragment : Fragment() {
         )
         movies_recycler_view.adapter = adapter.apply { addAll(moviesList) }
     }
-
 
     private fun initSearchBar() {
         search_toolbar.search_edit_text.afterTextChanged {
