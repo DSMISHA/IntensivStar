@@ -24,7 +24,7 @@ object MovieApiClient {
 
     val apiClient: MovieApiInterface by lazy{
         val gson = GsonBuilder()
-            .setLenient()
+//            .setLenient()
             .create()
 
         Retrofit.Builder()
