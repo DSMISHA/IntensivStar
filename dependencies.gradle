@@ -1,0 +1,45 @@
+//https://androidschool.ru/2019/10/09/improve-build-gradle/ example
+
+ext.versions = [
+        minSdk                   : 21,
+        targetSdk                : 30,
+        compileSdk               : 30,
+        buildTools               : '29.0.3',
+
+        rxJava                   : '2.2.10',
+        rxAndroid                : '2.1.1',
+        rxBinding                : '2.2.0',
+
+        retroAdapter             : '2.9.0',
+        retroConverter           : '2.5.0',
+
+        okhttp                   : '3.14.9',
+        okhttpLoginInterceptor   : '3.6.0',
+
+        picasso                  : '2.71828',
+        picassoTransform         : '2.2.1'
+]
+
+ext.libraries = [
+        // rxJava 2
+        rxJava                   : "io.reactivex.rxjava2:rxjava:$versions.rxJava",
+        rxAndroid                : "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
+        rxBinding                : "com.jakewharton.rxbinding2:rxbinding:$versions.rxBinding",
+
+        // retrofit
+        retroAdapter             : "com.squareup.retrofit2:adapter-rxjava2:$versions.retroAdapter",
+        retroConverter           : "com.squareup.retrofit2:converter-gson:$versions.retroConverter",
+
+        // okhttp3
+        okhttp                   : "com.squareup.okhttp3:okhttp:$versions.okhttp",
+        okhttpLoginInterceptor   : "com.squareup.okhttp3:logging-interceptor:$versions.okhttpLoginInterceptor",
+
+        // Picasso
+        picasso                  : "com.squareup.picasso:picasso:$versions.picasso",
+        picassoTransform         : "jp.wasabeef:picasso-transformations:$versions.picassoTransform"
+
+]
+
+ext.gradlePlugins = [
+
+]

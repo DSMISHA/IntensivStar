@@ -6,7 +6,8 @@
     <string name="main_title">Что будете смотреть\nсегодня?</string>
     <string name="recommended">Рекомендуем</string>
     <string name="popular">Популярные</string>
-    <string name="upcoming">Новинки</string>
+    <string name="upcoming">Ожидаемые</string>
+    <string name="watching">Смотрят сейчас</string>
 
     <string name="home">Главная</string>
 
@@ -26,4 +27,12 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="placeholder">Пёс Киноман</string>
+
+    <string name="details_btn_watch_text">Смотреть</string>
+    <string name="details_studio_header">Студия</string>
+    <string name="details_genre_header">Жанр</string>
+    <string name="details_year_header">Год</string>
+
+    <string name="search_title">Результат поиска</string>
+
 </resources>

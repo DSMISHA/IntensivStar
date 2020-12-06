@@ -1,6 +1,8 @@
 package ru.mikhailskiy.intensiv
 
 import android.app.Application
+import ru.mikhailskiy.intensiv.network.RestApi
+import ru.mikhailskiy.intensiv.network.RestApiInterface
 import timber.log.Timber
 
 class MovieFinderApp : Application() {
@@ -23,5 +25,9 @@ class MovieFinderApp : Application() {
     companion object {
         var instance: MovieFinderApp? = null
             private set
+    }
+
+    fun getRestApi(): RestApiInterface {
+        return RestApi
     }
 }

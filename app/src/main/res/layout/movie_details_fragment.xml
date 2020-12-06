@@ -1,13 +1,183 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blueDark"
     tools:context="ru.mikhailskiy.intensiv.ui.movie_details.MovieDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
 
-</FrameLayout>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_movie_image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/details_header_image_height"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/BottomCorner"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_movie_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/details_margin"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/details_header_text_size"
+            android:textStyle="bold"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/btn_watch"
+            android:layout_width="@dimen/details_button_height"
+            android:layout_height="50dp"
+            android:layout_margin="@dimen/details_margin">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_btn_watch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/detailsBtnGray"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/details_btn_watch_text"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
+        </FrameLayout>
+
+
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/movie_rating_details"
+            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressBackgroundTint="@color/colorControlNormal"
+            android:stepSize="0.5"
+            tools:rating="5"
+            android:layout_gravity="center_vertical|end"
+            android:layout_margin="@dimen/details_margin"/>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/details_margin"
+            android:textSize="@dimen/details_text_size"
+            android:textColor="@color/semi_white"
+            android:lineSpacingMultiplier="1.7"
+            />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_characters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:itemCount="7"
+            tools:listitem="@layout/item_character"
+            android:layout_margin="@dimen/details_margin"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/details_margin"
+            android:layout_marginEnd="@dimen/details_margin">
+
+            <TextView
+                android:id="@+id/tv_studio_header"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/details_studio_header"
+                android:textSize="@dimen/details_text_size"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tv_studio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/details_text_size"
+                android:textColor="@color/semi_white"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/details_margin"
+            android:layout_marginEnd="@dimen/details_margin"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/tv_genre_header"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/details_genre_header"
+                android:textSize="@dimen/details_text_size"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tv_genre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/details_text_size"
+                android:textColor="@color/semi_white"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/details_margin"
+            android:layout_marginEnd="@dimen/details_margin"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/tv_year_header"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/details_year_header"
+                android:textSize="@dimen/details_text_size"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tv_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/details_text_size"
+                android:textColor="@color/semi_white"/>
+
+        </LinearLayout>
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+
+
+    </LinearLayout>
+
+</ScrollView>
