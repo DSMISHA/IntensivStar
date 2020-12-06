@@ -1,9 +1,12 @@
 package ru.mikhailskiy.intensiv.ui.search
 
+import ru.mikhailskiy.intensiv.data.MovieModel
+
 interface SearchContract {
     interface View{
-        fun showSearchResult()
+        fun showSearchResult(movies: List<MovieModel>?)
         fun showInputError()
+        fun showProgress(isVisible: Boolean)
     }
 
     interface Presenter{

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import ru.mikhailskiy.intensiv.R
@@ -22,7 +23,7 @@ class SearchBar @JvmOverloads constructor(
 
     private var hint: String = ""
     private var isCancelVisible: Boolean = true
-    private var textChangeListener: OnTextChangeListener? = null;
+//    private var textChangeListener: OnTextChangeListener? = null;
 
     init {
         LayoutInflater.from(context).inflate(R.layout.search_toolbar, this)
@@ -52,7 +53,7 @@ class SearchBar @JvmOverloads constructor(
 
 
 
-        search_edit_text.addTextChangedListener(object: TextWatcher{
+        /*search_edit_text.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(p0: Editable?) {
                 //todo
             }
@@ -65,7 +66,7 @@ class SearchBar @JvmOverloads constructor(
                 textChangeListener?.onTextChange(p0.toString())
             }
 
-        })
+        })*/
     }
 
     override fun onAttachedToWindow() {
@@ -80,11 +81,15 @@ class SearchBar @JvmOverloads constructor(
         }
     }
 
-    fun setOnTextChangeListener(listener: OnTextChangeListener){
-        this.textChangeListener = listener;
+    fun getEditable(): EditText?{
+        return search_edit_text
     }
 
-    interface OnTextChangeListener{
+    /*fun setOnTextChangeListener(listener: OnTextChangeListener){
+        this.textChangeListener = listener;
+    }*/
+
+    /*interface OnTextChangeListener{
         fun onTextChange(text: String)
-    }
+    }*/
 }

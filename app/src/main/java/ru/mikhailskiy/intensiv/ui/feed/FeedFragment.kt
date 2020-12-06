@@ -11,7 +11,6 @@ import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Action
 import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
@@ -72,7 +71,10 @@ class FeedFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnComplete { (activity as MainActivity).showProgress(false) }
             .doOnSubscribe{ (activity as MainActivity).showProgress(true) }
-            .doOnError { it.printStackTrace() }
+            .doOnError {
+                (activity as MainActivity).showProgress(false)
+                it.printStackTrace()
+            }
             .subscribe {
                 initSection(it[0], R.string.popular)
                 initSection(it[1], R.string.watching)

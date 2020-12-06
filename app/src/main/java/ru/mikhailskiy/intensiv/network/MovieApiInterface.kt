@@ -44,6 +44,11 @@ interface MovieApiInterface {
         @Path("movie_id") id: Int
     ): Observable<Cast?>?
 
+    @GET("search/movie$QUARRY_API_KEY$QUARRY_LANGUAGE")
+    fun searchMovie(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): Observable<MovieWrapper?>?
 }
 
 

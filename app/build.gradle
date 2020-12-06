@@ -82,6 +82,7 @@ dependencies {
     // RxJava2 Dependencies
     implementation libraries.rxJava
     implementation libraries.rxAndroid
+    implementation libraries.rxBinding
 
     // okhttp3
     implementation libraries.okhttp

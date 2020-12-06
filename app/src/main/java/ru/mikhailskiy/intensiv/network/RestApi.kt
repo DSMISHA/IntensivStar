@@ -1,5 +1,6 @@
 package ru.mikhailskiy.intensiv.network
 
+import android.app.DownloadManager
 import io.reactivex.Observable
 import ru.mikhailskiy.intensiv.data.*
 
@@ -10,6 +11,7 @@ interface RestApiInterface{
     fun getTvShows(): Observable<TvShowWrapper?>?
     fun getDetails(id: Int): Observable<MovieModel?>?
     fun getMovieCast(id: Int): Observable<Cast?>?
+    fun searchMovie(query: String): Observable<MovieWrapper?>?
 }
 
 
@@ -43,4 +45,8 @@ object RestApi : RestApiInterface{
         return MovieApiClient.apiClient.getMovieCast(id)
     }
 
+    override fun searchMovie(query: String): Observable<MovieWrapper?>? {
+        val page = 1
+        return MovieApiClient.apiClient.searchMovie(query, page)
+    }
 }

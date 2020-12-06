@@ -33,4 +33,6 @@
     <string name="details_genre_header">Жанр</string>
     <string name="details_year_header">Год</string>
 
+    <string name="search_title">Результат поиска</string>
+
 </resources>
